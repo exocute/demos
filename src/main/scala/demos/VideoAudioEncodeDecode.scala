@@ -1,5 +1,7 @@
+package demos
+
 import java.awt.image.BufferedImage
-import java.io.{File, IOException}
+import java.io.{File, IOException, PrintStream}
 import java.nio.file.{Files, Path, Paths}
 import java.util.UUID
 import javax.imageio.ImageIO
@@ -36,12 +38,22 @@ object VideoAudioEncodeDecode {
       ImageIO.write(image, "png", file)
     }
 
+    val err = System.err
+    val file = new File(TEMPPATH + "\\log.txt")
+    file.getParentFile.mkdirs()
+    val stream = new PrintStream(file)
+    System.setErr(stream)
+
     val demuxer: Demuxer = Demuxer.make
     demuxer.open(moviePath, null, false, true, null, null)
     val numStreams: Int = demuxer.getNumStreams
     var frame: Int = 0
     var videoStreamId: Int = -1
     var videoDecoder: Decoder = null
+
+    System.setErr(err)
+    stream.close()
+    deleteTempFile(file.getAbsolutePath)
 
     println("Started to decode...")
     //gets the decoder to videoDecoder
@@ -54,7 +66,7 @@ object VideoAudioEncodeDecode {
       }
     }
     //if no decoder available for the format exception thrown
-    if (videoStreamId == -1) throw new RuntimeException("could not find video stream in container: " + moviePath)
+    if (videoStreamId == -1) throw new RuntimeException("Could not find video stream in container: " + moviePath)
 
     //opens the videoDecoder to start processing; sets the size of the frames ; creates the converterMediaPicture
     videoDecoder.open(null, null)
@@ -72,21 +84,20 @@ object VideoAudioEncodeDecode {
         if (picture.isComplete) {
           image = converter.toImage(image, picture)
           savePicture(FRAMESPATH + frame, image)
-          if (frame % 100 == 0) println("Decoded " + frame + " frames")
           frame += 1
+          if (frame % 100 == 0) println("Decoded " + frame + " frames")
         }
         offset += bytesRead
       } while (offset < packet.getSize)
     }
-
-
+    
     do {
       videoDecoder.decode(picture, null, 0)
       if (picture.isComplete) {
         image = converter.toImage(image, picture)
         savePicture(FRAMESPATH + frame, image)
-        if (frame % 100 == 0) println("Decoded " + frame + " frames")
         frame += 1
+        if (frame % 100 == 0) println("Decoded " + frame + " frames")
       }
     } while (picture.isComplete)
 
@@ -95,12 +106,12 @@ object VideoAudioEncodeDecode {
 
     //closes de decoder
     demuxer.close()
-    println("Image Decoding Done! Starting to decode audio...")
+    println("Image decoding done!\nStarting to decode audio...")
 
     //extracts Audio
     extractAudio(moviePath)
-    println("Audio Decoding Done!")
-    println("Decoding Movie Completed!")
+    println("Audio decoding done!")
+    println("Decoding movie completed!")
 
     ((frame / seconds).toInt, frame)
   }
