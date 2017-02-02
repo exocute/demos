@@ -1,4 +1,4 @@
-# VideoCompression
+# VideoCompressor
 -------------------------------------------------------------------------------
 ## Requirements
 ExoNode should be working at localHost</br>
@@ -14,4 +14,4 @@ videoCompressor:</br>
 4 - using JCodec, encodes all frames back together with the information if every frame should be a keyFrame or not, FFMPEG encodes the audio</br>
 5 - results in a compressed video file</br>
 
-CHECK VideoCompression.png, compress.grp for## a better understanding </br>
+Check VideoCompression.png, compress.grp for## a better understanding </br>
