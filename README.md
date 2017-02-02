@@ -1,12 +1,12 @@
 # VideoCompression
 -------------------------------------------------------------------------------
 ## Requirements
-ExoNode should be working at localHost
-videoCompressor
+ExoNode should be working at localHost</br>
+videoCompressor</br>
 
 ## How to Use?
-run videoCompressor {inputFilePath} {resultFilePath}
-f
+run videoCompressor {inputFilePath} {resultFilePath}</br>
+
 ## How does it works?
 videoCompressoffefer:
 1 - uses HumbleVideo to decode all frames of the input file and FFMPEG to decode the audio from the file
