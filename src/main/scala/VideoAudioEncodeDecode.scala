@@ -13,16 +13,9 @@ import org.jcodec.api.awt.AWTSequenceEncoder8Bit
   */
 object VideoAudioEncodeDecode {
 
-  def main(args: Array[String]): Unit = {
-    val (fps,frames) = VideoAudioEncodeDecode.convertVideoToImages("la-la-land-trailer-4_h480p.mp4","frames\\test\\image", "audio.mp3")
-    println("converted")
-    val keyFrames = Vector(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, true, false, false, true, false, true, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false)
-    VideoAudioEncodeDecode.produceVideo("result.mp4","frames\\test\\image","audio.mp3",fps,keyFrames)
-  }
-
   @throws[InterruptedException]
   @throws[IOException]
-  def convertVideoToImages(moviePath: String, framesTarget: String, audioTarget : String): (Int,Int) = {
+  def convertVideoToImages(moviePath: String, framesTarget: String, audioTarget: String): (Int, Int) = {
 
     val demuxer: Demuxer = Demuxer.make
     demuxer.open(moviePath, null, false, true, null, null)
@@ -57,9 +50,9 @@ object VideoAudioEncodeDecode {
         bytesRead += videoDecoder.decode(picture, packet, offset)
         if (picture.isComplete) {
           image = converter.toImage(image, picture)
-          savePicture(framesTarget+frame,image)
-          println("Image Processed "+frame)
-          frame+=1
+          savePicture(framesTarget + frame, image)
+          println("Image Processed " + frame)
+          frame += 1
         }
         offset += bytesRead
       } while (offset < packet.getSize)
@@ -70,9 +63,9 @@ object VideoAudioEncodeDecode {
       videoDecoder.decode(picture, null, 0)
       if (picture.isComplete) {
         image = converter.toImage(image, picture)
-        savePicture(framesTarget+frame,image)
-        println("Image Processed "+frame)
-        frame+=1
+        savePicture(framesTarget + frame, image)
+        println("Image Processed " + frame)
+        frame += 1
       }
     } while (picture.isComplete)
 
@@ -80,15 +73,15 @@ object VideoAudioEncodeDecode {
 
     demuxer.close()
 
-    if(!audioTarget.isEmpty)
-      extractAudio(moviePath,audioTarget)
+    if (!audioTarget.isEmpty)
+      extractAudio(moviePath, audioTarget)
 
-    (frame / seconds,frame)
+    (frame / seconds, frame)
   }
 
-  def savePicture(path : String, image : BufferedImage) = {
-    val file : File = new File(path+".png");
-    file.getParentFile().mkdirs();
+  def savePicture(path: String, image: BufferedImage) = {
+    val file: File = new File(path + ".png")
+    file.getParentFile().mkdirs()
     ImageIO.write(image, "png", file)
   }
 
@@ -96,11 +89,11 @@ object VideoAudioEncodeDecode {
     * Produces a video with a sequence of input images and an audio file
     *
     * @param targetVideoName the path and name of the result video
-    * @param framesPathName the path and the prefix of the images
-    * @param audioPathName the path and the prefix of the audio file generated - if no audio audio available
-    *                      use and empty string
-    * @param frameRate fps
-    * @param keyFrames Vector of booleans - true --> isKeyFrame and false --> isNotAKeyFrame
+    * @param framesPathName  the path and the prefix of the images
+    * @param audioPathName   the path and the prefix of the audio file generated - if no audio audio available
+    *                        use and empty string
+    * @param frameRate       fps
+    * @param keyFrames       Vector of booleans - true --> isKeyFrame and false --> isNotAKeyFrame
     */
   def produceVideo(targetVideoName: String, framesPathName: String, audioPathName: String, frameRate: Int, keyFrames: Vector[Boolean]) = {
 
@@ -111,7 +104,7 @@ object VideoAudioEncodeDecode {
     println("Encoded in:" + (System.currentTimeMillis() - time) + " Milliseconds")
 
 
-    if(!audioPathName.isEmpty) {
+    if (!audioPathName.isEmpty) {
       //adds audio
       val timeAudio: Long = System.currentTimeMillis()
       println("Adding Audio...")
@@ -121,7 +114,7 @@ object VideoAudioEncodeDecode {
 
     def createVideo() = {
       def encodeImage(encoder: AWTSequenceEncoder8Bit, index: Int, isKeyFrame: Boolean) = {
-        println("Encoded image: "+index)
+        println("Encoded image: " + index)
         val image: BufferedImage = ImageIO.read(new File(framesPathName + index + ".png"))
         encoder.encodeImage(image, isKeyFrame)
       }
@@ -140,23 +133,24 @@ object VideoAudioEncodeDecode {
     def addAudio() = {
       //uses ffmpeg to add audio
       val rt: Runtime = Runtime.getRuntime
-      val id : String = UUID.randomUUID().toString
-      val pr: Process = rt.exec("lib\\ffmpeg -i " + targetVideoName + " -i " + audioPathName + " -c:v copy -c:a aac -strict experimental "+id+".mp4");
+      val id: String = UUID.randomUUID().toString
+      val pr: Process = rt.exec("lib\\ffmpeg -i " + targetVideoName + " -i " + audioPathName + " -c:v copy -c:a aac -strict experimental " + id + ".mp4")
       pr.waitFor()
-      val path : Path = Paths.get(targetVideoName)
+      val path: Path = Paths.get(targetVideoName)
       Files.delete(path)
-      new File(id+".mp4").renameTo(new File(targetVideoName))
+      new File(id + ".mp4").renameTo(new File(targetVideoName))
     }
   }
 
   /**
     * extracts the audio from a file
+    *
     * @param moviePath - movie path source
     * @param audioPath - audio path destination
     */
   def extractAudio(moviePath: String, audioPath: String) = {
     val rt: Runtime = Runtime.getRuntime
-    val pr: Process = rt.exec("lib\\ffmpeg -i " + moviePath + " "+ audioPath)
+    val pr: Process = rt.exec("lib\\ffmpeg -i " + moviePath + " " + audioPath)
     pr.waitFor()
   }
 
