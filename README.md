@@ -1,4 +1,4 @@
-# VideoCompression
+## VideoCompression
 A simple video compressor using exocute
 -------------------------------------------------------------------------------
 ## Requirements
