@@ -1,5 +1,4 @@
-## VideoCompression
-A simple video compressor using exocute
+# VideoCompression
 -------------------------------------------------------------------------------
 ## Requirements
 ExoNode should be working at localHost
