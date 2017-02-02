@@ -4,7 +4,7 @@
 ExoNode should be working at localHost</br>
 
 ## How to Use?
-run videoCompressor {inputFilePath} {resultFilePath}</br>
+run videoCompressor</br>
 
 ## How does it works?
 videoCompressor:</br>
