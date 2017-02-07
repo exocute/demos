@@ -1,0 +1,4 @@
+Graph CompressVideo
+Activity D   		demos.compressDemo.activities.Diff:1024
+Activity IsKeyFrame demos.compressDemo.activities.IsKeyFrame:15
+Connection D->IsKeyFrame
