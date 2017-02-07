@@ -17,7 +17,7 @@ videoCompressor:</br>
 5 - results in a compressed video file</br>
 
 videoCompressorParallel:</br>
-  all at the same time:
+  all this tasks are done in parallel:</br>
     - uses HumbleVideo to decode all frames of the input file and FFMPEG to decode the audio from the file </br>
     - sends all pairs of consecutive frames to exocute (frame1,frame2)</br>
     - uses exocute to calculate the difference of each pair of frames and decide if the pair has a keyframe on frame 2 </br>
