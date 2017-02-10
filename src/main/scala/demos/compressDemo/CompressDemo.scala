@@ -4,9 +4,9 @@ import java.io._
 import javax.imageio.ImageIO
 import javax.swing.JFileChooser
 
+import clifton.graph.StarterExoGraph
 import demos.VideoAudioEncodeDecode
 import demos.compressDemo.activities.ImageConverters._
-import executable.StarterExoGraph
 
 import scala.util.Success
 
@@ -27,6 +27,12 @@ object CompressDemo {
 
         println("Total Time: " + (System.currentTimeMillis() - t))
     }
+
+    //    val fileName = new File("VideoCompression.PNG")
+    //    val image = ImageIO.read(fileName)
+    //    val newImage = convertToBufferedImage(image)
+    //    val outputfile = new File("saved.png")
+    //    ImageIO.write(newImage, "png", outputfile)
   }
 
   private def chooseFile(description: String): Option[String] = {
@@ -45,10 +51,15 @@ object CompressDemo {
     val jarFile = new File("classes.jar")
     val diffFile = new File("diffTemp.txt")
 
-    val starter = new StarterExoGraph
-    //    SpaceCache.cleanAllSpaces()
+    //    SpaceCache.dataHost = "52.178.165.169"
+    //    SpaceCache.jarHost = "52.178.165.169"
+    //    SpaceCache.signalHost = "52.178.165.169"
 
-    val Success((inj, col)) = starter.addGraph(grpFile, List(jarFile))
+    val starter = new StarterExoGraph
+
+    val Success(graph) = starter.addGraph(grpFile, List(jarFile), 30 * 60 * 1000)
+    val injector = graph.injector
+    val collector = graph.collector
 
     def createPairs(before: Serializable, nextFiles: Stream[File]): Stream[(Serializable, Serializable)] = {
       nextFiles match {
@@ -74,7 +85,7 @@ object CompressDemo {
         n += 1
         if (n % 100 == 0)
           println(s"Injected $n inputs")
-        inj.inject(pair)
+        injector.inject(pair)
       }).toVector
 
 
@@ -87,11 +98,11 @@ object CompressDemo {
 
     val diffs =
       for (index <- ids.indices) yield {
-        val diff = col.collect(ids(index), 24 * 60 * 60 * 1000).get
+        val diff = collector.collect(ids(index), 24 * 60 * 60 * 1000).get.asInstanceOf[Boolean]
         if (index + 1 % 100 == 0)
           println(s"Collected ${index + 1} results")
         file.write(diff + "\n")
-        diff.toString.toBoolean
+        diff
       }
 
     file.close()

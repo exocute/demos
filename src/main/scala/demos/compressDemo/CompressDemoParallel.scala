@@ -1,7 +1,7 @@
 package demos.compressDemo
 
-import java.awt.{Color, Font, Graphics2D}
 import java.awt.image.BufferedImage
+import java.awt.{Color, Font, Graphics2D}
 import java.io._
 import java.nio.file.{Files, Path, Paths}
 import java.util.UUID
@@ -10,11 +10,11 @@ import java.util.concurrent.{BlockingDeque, LinkedBlockingDeque}
 import javax.imageio.ImageIO
 import javax.swing.JFileChooser
 
-import clifton.graph.CliftonInjector
+import api.Injector
+import clifton.graph.StarterExoGraph
 import demos.compressDemo.activities.ImageConverters._
-import executable.StarterExoGraph
-import io.humble.video.awt.{MediaPictureConverter, MediaPictureConverterFactory}
 import io.humble.video._
+import io.humble.video.awt.{MediaPictureConverter, MediaPictureConverterFactory}
 import org.jcodec.api.awt.AWTSequenceEncoder8Bit
 
 import scala.util.Success
@@ -36,16 +36,15 @@ object CompressDemoParallel {
         val resultPath = videoPath.substring(0, videoPath.lastIndexOf('.')) + "_compressed.mp4"
         println("      __  ___ __     __  __      __  __  ___ __  __  __  \n\\  /||  \\|__ /  \\   /  `/  \\|\\/||__)|__)|__ /__`/  \\|__) \n \\/ ||__/|___\\__/   \\__,\\__/|  ||   |  \\|___.__/\\__/|  \\ \n                                                         ")
         //if no fps set default is 25
-        val fps = if (args.size > 0) args(0).toInt else 25
+        val fps = if (args.nonEmpty) args(0).toInt else 25
 
         val grpFile = new File("compressParallel.grp")
         val jarFile = new File("classes.jar")
-        val diffFile = new File("diffTemp.txt")
         val TIMETOTAKE = 24 * 60 * 60 * 1000
 
         val starter = new StarterExoGraph
 
-        val Success((inj, col)) = starter.addGraph(grpFile, List(jarFile))
+        val Success(graph) = starter.addGraph(grpFile, List(jarFile), 30 * 60 * 1000)
 
         //number images decoded
         val images: AtomicInteger = new AtomicInteger()
@@ -53,24 +52,25 @@ object CompressDemoParallel {
         //ids of the injects
         val ids: BlockingDeque[String] = new LinkedBlockingDeque[String]()
 
-        //starts to inject since has two available images
+        //starts to inject when two images are available
         var lastInjected = 2
 
         //decodes the video to images and extracts the audio
         val decode = new Thread {
-          override def run() = {
-            convertVideoToImages(videoPath, inj, images)
+          override def run(): Unit = {
+            convertVideoToImages(videoPath, graph.injector, images)
           }
         }
 
         //injects available input into the space
         val inject = new Thread {
           override def run(): Unit = {
+            val injector = graph.injector
             while (decode.isAlive || lastInjected < images.get() + 1) {
               //just start when there is two available images
               if (lastInjected < images.get() + 1) {
                 val (img1, img2) = getPairImage(lastInjected)
-                ids.put(inj.inject((img1, img2)))
+                ids.put(injector.inject((img1, img2)))
                 lastInjected += 1
                 if (lastInjected % 100 == 0) println("Injected " + lastInjected + " Images")
                 //sleeps some time to free the flySpace
@@ -88,7 +88,7 @@ object CompressDemoParallel {
           }
         }
 
-        //encodes available results into the space and creates a new compressed video
+        //encodes available results from the space and creates a new compressed video
         val encode = new Thread {
           override def run = {
             val enc: AWTSequenceEncoder8Bit = AWTSequenceEncoder8Bit.createSequenceEncoder8Bit(new File(resultPath), fps)
@@ -102,9 +102,11 @@ object CompressDemoParallel {
             println("Encoded Image: " + encoded)
             encoded += 1
 
+            val collector = graph.collector
+
             while (inject.isAlive || ids.size() > 0) {
               if (ids.size() > 0) {
-                val result = col.collect(ids.poll(), TIMETOTAKE).get.asInstanceOf[Boolean]
+                val result = collector.collect(ids.poll(), TIMETOTAKE).get.asInstanceOf[Boolean]
                 val image: BufferedImage = ImageIO.read(new File(FRAMESPATH + encoded + ".png"))
                 enc.encodeImage(if (result) printKeyFrame(image) else image, result)
                 if (encoded % 100 == 0) println("Encoded " + encoded + " Images")
@@ -127,12 +129,13 @@ object CompressDemoParallel {
 
         //clean TempDirectory
         cleanTempDirectory()
-        println(" __________________________________________________________\n|\t\t\t\t\t\tRESUME")
+        val tableSize = 58
+        println(" " + "_" * tableSize + "\n|\t\t\t\t\t\tRESUME")
         println("|Compressed File: " + resultPath)
         println("|FPS: " + fps)
         println("|Frames: " + images.get())
         println("|Total Time: " + (System.currentTimeMillis() - t))
-        println("|__________________________________________________________")
+        println("|" + "_" * tableSize)
     }
   }
 
@@ -206,7 +209,7 @@ object CompressDemoParallel {
     */
   @throws[InterruptedException]
   @throws[IOException]
-  def convertVideoToImages(moviePath: String, inj: CliftonInjector, frame: AtomicInteger) = {
+  def convertVideoToImages(moviePath: String, inj: Injector, frame: AtomicInteger) = {
 
     def savePicture(path: String, image: BufferedImage) = {
       val file: File = new File(path + ".png")

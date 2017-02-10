@@ -1,7 +1,7 @@
 package demos.compressDemo.activities
 
 import java.awt.image.BufferedImage
-import java.awt.{Graphics2D, Image}
+import java.awt.{Color, Font, Graphics2D, Image}
 import javax.swing.ImageIcon
 
 import scala.language.implicitConversions
@@ -17,6 +17,9 @@ object ImageConverters {
       BufferedImage.TYPE_INT_ARGB)
     val g: Graphics2D = newImage.createGraphics()
     g.drawImage(image, 0, 0, null)
+    g.setFont(new Font("keyFrame", Font.BOLD, 150))
+    g.setColor(Color.RED)
+    g.drawString("ola", 300, 300)
     g.dispose()
     newImage
   }
