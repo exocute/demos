@@ -28,7 +28,6 @@ object CompressDemoParallel {
   val AUDIOPATH = "temp\\audio.mp3"
   val TEMPPATH = "temp"
 
-
   def main(args: Array[String]): Unit = {
     chooseFile("Choose a video file").foreach {
       videoPath =>
@@ -50,7 +49,7 @@ object CompressDemoParallel {
         val images: AtomicInteger = new AtomicInteger()
 
         //ids of the injects
-        val ids: BlockingDeque[String] = new LinkedBlockingDeque[String]()
+        val ids: BlockingDeque[Int] = new LinkedBlockingDeque[Int]()
 
         //starts to inject when two images are available
         var lastInjected = 2
@@ -106,7 +105,7 @@ object CompressDemoParallel {
 
             while (inject.isAlive || ids.size() > 0) {
               if (ids.size() > 0) {
-                val result = collector.collect(ids.poll(), TIMETOTAKE).get.asInstanceOf[Boolean]
+                val result = collector.collectIndex(ids.poll(), TIMETOTAKE).get.asInstanceOf[Boolean]
                 val image: BufferedImage = ImageIO.read(new File(FRAMESPATH + encoded + ".png"))
                 enc.encodeImage(if (result) printKeyFrame(image) else image, result)
                 if (encoded % 100 == 0) println("Encoded " + encoded + " Images")
@@ -254,19 +253,21 @@ object CompressDemoParallel {
     val packet: MediaPacket = MediaPacket.make
 
     //starts decoding frame by frame reading packet by packet
-    while (demuxer.read(packet) >= 0) if (packet.getStreamIndex == videoStreamId) {
-      var offset: Int = 0
-      var bytesRead: Int = 0
-      do {
-        bytesRead += videoDecoder.decode(picture, packet, offset)
-        if (picture.isComplete) {
-          image = converter.toImage(image, picture)
-          savePicture(FRAMESPATH + frame, image)
-          frame.incrementAndGet()
-          if (frame.get() % 100 == 0) println("Decoded " + frame.get() + " frames")
-        }
-        offset += bytesRead
-      } while (offset < packet.getSize)
+    while (demuxer.read(packet) >= 0) {
+      if (packet.getStreamIndex == videoStreamId) {
+        var offset: Int = 0
+        var bytesRead: Int = 0
+        do {
+          bytesRead += videoDecoder.decode(picture, packet, offset)
+          if (picture.isComplete) {
+            image = converter.toImage(image, picture)
+            savePicture(FRAMESPATH + frame, image)
+            frame.incrementAndGet()
+            if (frame.get() % 100 == 0) println("Decoded " + frame.get() + " frames")
+          }
+          offset += bytesRead
+        } while (offset < packet.getSize)
+      }
     }
 
     do {

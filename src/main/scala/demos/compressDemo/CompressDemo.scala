@@ -78,7 +78,7 @@ object CompressDemo {
     println(s"Starting to inject inputs...")
 
     var n = 0
-    val ids: Vector[String] =
+    val ids: Vector[Int] =
       (for {
         pair <- allPairs
       } yield {
@@ -98,7 +98,7 @@ object CompressDemo {
 
     val diffs =
       for (index <- ids.indices) yield {
-        val diff = collector.collect(ids(index), 24 * 60 * 60 * 1000).get.asInstanceOf[Boolean]
+        val diff = collector.collectIndex(ids(index), 24 * 60 * 60 * 1000).get.asInstanceOf[Boolean]
         if (index + 1 % 100 == 0)
           println(s"Collected ${index + 1} results")
         file.write(diff + "\n")
