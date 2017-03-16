@@ -7,7 +7,7 @@ import javax.swing.ImageIcon
 import scala.language.implicitConversions
 
 /**
-  * Created by #ScalaTeam on 25-01-2017.
+  * Created by #GrowinScala
   */
 object ImageConverters {
 

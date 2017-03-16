@@ -7,7 +7,7 @@ import exocute.Activity
 import ImageConverters._
 
 /**
-  * Created by #ScalaTeam on 25-01-2017.
+  * Created by #GrowinScala
   */
 class Diff extends Activity {
   def process(input: java.io.Serializable, params: Vector[String]): java.io.Serializable = {

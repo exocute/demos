@@ -12,4 +12,4 @@ resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repos
 
 libraryDependencies ++= Seq("com.flyobjectspace" %% "flyscala" % "2.2.0-SNAPSHOT")
 
-libraryDependencies += "growin" %% "toolkit" % "0.1-SNAPSHOT"
+libraryDependencies += "growin" %% "toolkit" % "1.1-SNAPSHOT"

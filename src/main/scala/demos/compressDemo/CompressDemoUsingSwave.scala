@@ -20,7 +20,7 @@ import scala.concurrent.Future
 import scala.util.Success
 
 /**
-  * Created by #ScalaTeam on 15-02-2017.
+  * Created by #GrowinScala
   */
 object CompressDemoUsingSwave {
 

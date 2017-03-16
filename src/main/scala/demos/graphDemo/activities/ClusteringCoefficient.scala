@@ -6,7 +6,7 @@ import demos.graphDemo.activities.ImportGML.GraphType
 import exocute.Activity
 
 /**
-  * Created by #ScalaTeam on 06/03/2017.
+  * Created by #GrowinScala
   */
 class ClusteringCoefficient extends Activity {
 

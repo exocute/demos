@@ -3,7 +3,7 @@ package demos.swaveToExocuteDemo
 import swave.core.Spout
 
 /**
-  * Created by #ScalaTeam on 07-03-2017.
+  * Created by #GrowinScala
   */
 object SwaveSpoutTester3 {
 

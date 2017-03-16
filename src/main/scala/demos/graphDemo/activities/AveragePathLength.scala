@@ -8,7 +8,7 @@ import exocute.Activity
 import scala.collection.mutable
 
 /**
-  * Created by #ScalaTeam on 06/03/2017.
+  * Created by #GrowinScala
   */
 class AveragePathLength extends Activity {
 

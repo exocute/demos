@@ -20,7 +20,7 @@ import org.jcodec.api.awt.AWTSequenceEncoder8Bit
 import scala.util.Success
 
 /**
-  * Created by #ScalaTeam on 25-01-2017.
+  * Created by #GrowinScala
   */
 object CompressDemoParallel {
 

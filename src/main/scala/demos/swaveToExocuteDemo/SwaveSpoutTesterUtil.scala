@@ -8,7 +8,7 @@ import toolkit.converters.SwaveToExoGraph._
 import scala.language.implicitConversions
 
 /**
-  * Created by #ScalaTeam on 07-03-2017.
+  * Created by #GrowinScala
   */
 object SwaveSpoutTesterUtil {
 

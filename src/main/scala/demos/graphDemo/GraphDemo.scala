@@ -10,7 +10,7 @@ import exonode.clifton.node.SpaceCache
 import scala.util.{Failure, Success}
 
 /**
-  * Created by #ScalaTeam on 06/03/2017.
+  * Created by #GrowinScala
   */
 object GraphDemo {
 

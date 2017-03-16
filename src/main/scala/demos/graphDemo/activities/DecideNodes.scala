@@ -5,7 +5,7 @@ import java.io.Serializable
 import exocute.Activity
 
 /**
-  * Created by #ScalaTeam on 06/03/2017.
+  * Created by #GrowinScala
   */
 class DecideNodes extends Activity {
   def process(input: Serializable, params: Vector[String]): Serializable = {

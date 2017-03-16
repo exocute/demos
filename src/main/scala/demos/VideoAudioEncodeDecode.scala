@@ -11,9 +11,10 @@ import io.humble.video.awt.{MediaPictureConverter, MediaPictureConverterFactory}
 import org.jcodec.api.awt.AWTSequenceEncoder8Bit
 
 /**
+  * Created by #GrowinScala
+  *
   * Library that Decodes and Encodes Video and Audio
   * Libraries used: JCodec(Encode), HumbleVideo(Decode) and FFMPEG(Encode and Decode Audio)
-  * Created by #ScalaTeam on 01/02/2017.
   */
 object VideoAudioEncodeDecode {
 
@@ -90,7 +91,7 @@ object VideoAudioEncodeDecode {
         offset += bytesRead
       } while (offset < packet.getSize)
     }
-    
+
     do {
       videoDecoder.decode(picture, null, 0)
       if (picture.isComplete) {
