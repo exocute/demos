@@ -6,6 +6,4 @@ Activity D3   		demos.compressDemo.activities.Diff:1024
 Activity D4   		demos.compressDemo.activities.Diff:1024
 Activity Mean 		demos.compressDemo.activities.Mean
 Activity IsKeyFrame demos.compressDemo.activities.IsKeyFrame:15
-Connection Fork->D1,D2,D3,D4
-Connection D1->Mean:D2->Mean:D3->Mean:D4->Mean
-Connection Mean->IsKeyFrame
+Connection Fork -> D1,D2,D3,D4 -> Mean -> IsKeyFrame

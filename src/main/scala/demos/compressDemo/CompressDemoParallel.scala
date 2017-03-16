@@ -24,9 +24,11 @@ import scala.util.Success
   */
 object CompressDemoParallel {
 
-  val FRAMESPATH = "temp\\image"
-  val AUDIOPATH = "temp\\audio.mp3"
-  val TEMPPATH = "temp"
+  private val DATA_FOLDER = new File("demosData", "compressVideo")
+
+  private val TEMP_PATH = new File(DATA_FOLDER, "temp")
+  private val FRAMES_PATH = TEMP_PATH
+  private val AUDIO_PATH = new File(TEMP_PATH, "audio.mp3")
 
   def main(args: Array[String]): Unit = {
     chooseFile("Choose a video file").foreach {
@@ -37,8 +39,8 @@ object CompressDemoParallel {
         //if no fps set default is 25
         val fps = if (args.nonEmpty) args(0).toInt else 25
 
-        val grpFile = new File("compressParallel.grp")
-        val jarFile = new File("classes.jar")
+        val grpFile = new File(DATA_FOLDER, "compressParallel.grp")
+        val jarFile = new File(DATA_FOLDER, "classes.jar")
         val TIMETOTAKE = 24 * 60 * 60 * 1000
 
         val starter = new StarterExoGraph
@@ -79,8 +81,8 @@ object CompressDemoParallel {
           }
 
           def getPairImage(frame: Int): (Serializable, Serializable) = {
-            val image1 = ImageIO.read(new File(FRAMESPATH + (frame - 2) + ".png"))
-            val image2 = ImageIO.read(new File(FRAMESPATH + (frame - 1) + ".png"))
+            val image1 = ImageIO.read(new File(FRAMES_PATH, (frame - 2) + ".png"))
+            val image2 = ImageIO.read(new File(FRAMES_PATH, (frame - 1) + ".png"))
             val ser1: Serializable = convertToImageSerializable(image1)
             val ser2: Serializable = convertToImageSerializable(image2)
             (ser1, ser2)
@@ -89,14 +91,14 @@ object CompressDemoParallel {
 
         //encodes available results from the space and creates a new compressed video
         val encode = new Thread {
-          override def run = {
+          override def run(): Unit = {
             val enc: AWTSequenceEncoder8Bit = AWTSequenceEncoder8Bit.createSequenceEncoder8Bit(new File(resultPath), fps)
             var encoded = 0
             //waits until the first image is decoded
             while (images.get() < 1) ()
 
             //first image is always a keyframe
-            val image: BufferedImage = ImageIO.read(new File(FRAMESPATH + encoded + ".png"))
+            val image: BufferedImage = ImageIO.read(new File(FRAMES_PATH, encoded + ".png"))
             enc.encodeImage(printKeyFrame(image), true)
             println("Encoded Image: " + encoded)
             encoded += 1
@@ -105,8 +107,8 @@ object CompressDemoParallel {
 
             while (inject.isAlive || ids.size() > 0) {
               if (ids.size() > 0) {
-                val result = collector.collectIndex(ids.poll(), TIMETOTAKE).get.asInstanceOf[Boolean]
-                val image: BufferedImage = ImageIO.read(new File(FRAMESPATH + encoded + ".png"))
+                val result = collector.collectIndex(ids.poll(), TIMETOTAKE).get.get.asInstanceOf[Boolean]
+                val image: BufferedImage = ImageIO.read(new File(FRAMES_PATH, encoded + ".png"))
                 enc.encodeImage(if (result) printKeyFrame(image) else image, result)
                 if (encoded % 100 == 0) println("Encoded " + encoded + " Images")
                 encoded += 1
@@ -125,16 +127,22 @@ object CompressDemoParallel {
         inject.start()
         encode.start()
         encode.join()
+        graph.closeGraph()
 
-        //clean TempDirectory
         cleanTempDirectory()
-        val tableSize = 58
-        println(" " + "_" * tableSize + "\n|\t\t\t\t\t\tRESUME")
-        println("|Compressed File: " + resultPath)
-        println("|FPS: " + fps)
-        println("|Frames: " + images.get())
-        println("|Total Time: " + (System.currentTimeMillis() - t))
-        println("|" + "_" * tableSize)
+        val lines = List(
+          " Compressed File: " + resultPath,
+          " FPS: " + fps,
+          " Total Time: " + (System.currentTimeMillis() - t)
+        )
+        val maxSize = lines.map(_.length).max + 1
+        val tableLines = lines.map(line => "|" + line + " " * (maxSize - line.length) + "|")
+        val resumeStr = "RESUME"
+        val resumeSize1 = (maxSize - resumeStr.length) / 2
+        val resumeSize2 = if (resumeStr.length % 2 == 0) resumeSize1 else resumeSize1 + 1
+        val resume = "|" + " " * resumeSize1 + resumeStr + " " * resumeSize2 + "|"
+        val finalTable = (List(" " + "_" * maxSize, resume) ++ tableLines ++ List("|" + "_" * maxSize + "|")).mkString("\n")
+        println(finalTable)
     }
   }
 
@@ -146,7 +154,7 @@ object CompressDemoParallel {
     */
   private def chooseFile(description: String): Option[String] = {
     val chooser: JFileChooser = new JFileChooser()
-    chooser.setCurrentDirectory(new File(System.getProperty("user.home")))
+    chooser.setCurrentDirectory(new File(System.getProperty("user.dir")))
     val returnVal = chooser.showOpenDialog(null)
     if (returnVal == JFileChooser.APPROVE_OPTION) {
       Some(chooser.getSelectedFile.getAbsolutePath)
@@ -157,12 +165,11 @@ object CompressDemoParallel {
   /**
     * Removes a File from the system if it exists
     *
-    * @param path
+    * @param file
     */
-  def deleteTempFile(path: String) = {
-    val filePath: File = new File(path)
-    if (filePath.exists()) {
-      val pathFile: Path = Paths.get(path)
+  private def deleteTempFile(file: File) = {
+    if (file.exists()) {
+      val pathFile: Path = Paths.get(file.getPath)
       Files.delete(pathFile)
     }
   }
@@ -172,11 +179,11 @@ object CompressDemoParallel {
     *
     * @param moviePath - movie path source
     */
-  def extractAudio(moviePath: String) = {
+  private def extractAudio(moviePath: String) = {
     //removes the audio file if exists
-    deleteTempFile(AUDIOPATH)
+    deleteTempFile(AUDIO_PATH)
     val rt: Runtime = Runtime.getRuntime
-    val pr: Process = rt.exec("lib\\ffmpeg -i " + moviePath + " " + AUDIOPATH)
+    val pr: Process = rt.exec("lib\\ffmpeg -i " + moviePath + " " + AUDIO_PATH)
     pr.waitFor()
   }
 
@@ -186,16 +193,16 @@ object CompressDemoParallel {
     * @param targetVideoName
     * @return
     */
-  def addAudio(targetVideoName: String) = {
+  private def addAudio(targetVideoName: String) = {
     val id: String = UUID.randomUUID().toString
     val rt: Runtime = Runtime.getRuntime
     //uses ffmpeg to add audio
-    val pr: Process = rt.exec("lib\\ffmpeg -i " + targetVideoName + " -i " + AUDIOPATH + " -c:v copy -c:a aac -strict experimental " + id + ".mp4")
+    val pr: Process = rt.exec("lib\\ffmpeg -i " + targetVideoName + " -i " + AUDIO_PATH + " -c:v copy -c:a aac -strict experimental " + id + ".mp4")
     pr.waitFor()
 
     //deletes temp files
-    deleteTempFile(targetVideoName)
-    deleteTempFile(AUDIOPATH)
+    deleteTempFile(new File(targetVideoName))
+    deleteTempFile(AUDIO_PATH)
 
     //rename the temp file to the final result Video
     new File(id + ".mp4").renameTo(new File(targetVideoName))
@@ -208,7 +215,7 @@ object CompressDemoParallel {
     */
   @throws[InterruptedException]
   @throws[IOException]
-  def convertVideoToImages(moviePath: String, inj: Injector, frame: AtomicInteger) = {
+  private def convertVideoToImages(moviePath: String, inj: Injector, frame: AtomicInteger) = {
 
     def savePicture(path: String, image: BufferedImage) = {
       val file: File = new File(path + ".png")
@@ -216,21 +223,11 @@ object CompressDemoParallel {
       ImageIO.write(image, "png", file)
     }
 
-    val err = System.err
-    val file = new File(TEMPPATH + "\\log.txt")
-    file.getParentFile.mkdirs()
-    val stream = new PrintStream(file)
-    System.setErr(stream)
-
     val demuxer: Demuxer = Demuxer.make
     demuxer.open(moviePath, null, false, true, null, null)
     val numStreams: Int = demuxer.getNumStreams
     var videoStreamId: Int = -1
     var videoDecoder: Decoder = null
-
-    System.setErr(err)
-    stream.close()
-    deleteTempFile(file.getAbsolutePath)
 
     println("Started to decode...")
     //gets the decoder to videoDecoder
@@ -261,7 +258,7 @@ object CompressDemoParallel {
           bytesRead += videoDecoder.decode(picture, packet, offset)
           if (picture.isComplete) {
             image = converter.toImage(image, picture)
-            savePicture(FRAMESPATH + frame, image)
+            savePicture(FRAMES_PATH.getPath + File.separatorChar + frame, image)
             frame.incrementAndGet()
             if (frame.get() % 100 == 0) println("Decoded " + frame.get() + " frames")
           }
@@ -274,7 +271,7 @@ object CompressDemoParallel {
       videoDecoder.decode(picture, null, 0)
       if (picture.isComplete) {
         image = converter.toImage(image, picture)
-        savePicture(FRAMESPATH + frame, image)
+        savePicture(FRAMES_PATH.getPath + File.separatorChar + frame, image)
         frame.incrementAndGet()
         if (frame.get() % 100 == 0) println("Decoded " + frame.get() + " frames")
       }
@@ -296,7 +293,7 @@ object CompressDemoParallel {
     * @param image
     * @return
     */
-  def printKeyFrame(image: BufferedImage): BufferedImage = {
+  private def printKeyFrame(image: BufferedImage): BufferedImage = {
     val g: Graphics2D = image.createGraphics()
     g.drawImage(image, 0, 0, null)
     g.setFont(new Font("Arial", Font.BOLD, 20))
@@ -311,11 +308,12 @@ object CompressDemoParallel {
     *
     * @return
     */
-  def cleanTempDirectory() = {
-    val temp: File = new File(TEMPPATH)
-    for (file <- temp.listFiles())
-      if (!file.isDirectory)
-        file.delete()
-    temp.delete()
+  private def cleanTempDirectory() = {
+    Option(TEMP_PATH.listFiles()).foreach(fileList =>
+      for (file <- fileList)
+        if (!file.isDirectory)
+          file.delete()
+    )
+    TEMP_PATH.delete()
   }
 }
