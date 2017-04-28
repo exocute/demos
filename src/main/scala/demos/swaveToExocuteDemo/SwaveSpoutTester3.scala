@@ -13,7 +13,7 @@ object SwaveSpoutTester3 {
       .sub.map(SwaveSpoutTester3_aux.f).end
       .fanInToTuple
 
-    SwaveSpoutTesterUtil.test(spoutGenerator)
+    SwaveSpoutTesterUtil.testSwave(spoutGenerator)
   }
 
 }

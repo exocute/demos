@@ -5,6 +5,8 @@ import java.io.Serializable
 import swave.core.{Spout, StreamEnv}
 import toolkit.converters.SwaveToExoGraph._
 
+import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 import scala.language.implicitConversions
 
 /**
@@ -12,16 +14,19 @@ import scala.language.implicitConversions
   */
 object SwaveSpoutTesterUtil {
 
-  def test(spoutGenerator: => Spout[Serializable]): Unit = {
+  def testSwave(spoutGenerator: => Spout[Serializable]): Unit = {
+    testSwave(spoutGenerator, x => x)
+  }
+
+  def testSwave[T](spoutGenerator: => Spout[Serializable], joinFunction: Vector[Serializable] => T): Unit = {
     implicit val env = StreamEnv()
     implicit val gl = scala.concurrent.ExecutionContext.Implicits.global
 
-    val swaveSpout = spoutGenerator
-    val swaveSpoutToConvert = spoutGenerator
+    val swaveSpout, swaveSpoutToConvert = spoutGenerator
 
-    val future = swaveSpout.drainToVector(999)
+    val future: Future[T] = swaveSpout.drainToVector(Int.MaxValue).map(joinFunction)
 
-    val exoResult: Vector[Serializable] = swaveSpoutToConvert.toExoGraph.result
+    val exoResult: T = joinFunction(swaveSpoutToConvert.toExoGraph.result)
 
     val futureResult = future.map {
       swaveResult =>
@@ -30,10 +35,11 @@ object SwaveSpoutTesterUtil {
 
         print("Result are ")
         println(if (exoResult == swaveResult) "correct" else "incorrect")
-        System.console().flush()
     }
 
     env.shutdownOn(futureResult)
+
+    Await.result(futureResult, 1.hour)
   }
 
   implicit def convert(spout: Spout[AnyVal]): Spout[java.io.Serializable] = spout.asInstanceOf[Spout[java.io.Serializable]]

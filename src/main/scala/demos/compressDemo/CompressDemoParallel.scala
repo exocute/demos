@@ -107,7 +107,7 @@ object CompressDemoParallel {
 
             while (inject.isAlive || ids.size() > 0) {
               if (ids.size() > 0) {
-                val result = collector.collectIndex(ids.poll(), TIMETOTAKE).get.get.asInstanceOf[Boolean]
+                val result = collector.collectAllByIndex(ids.poll()).head.asInstanceOf[Boolean]
                 val image: BufferedImage = ImageIO.read(new File(FRAMES_PATH, encoded + ".png"))
                 enc.encodeImage(if (result) printKeyFrame(image) else image, result)
                 if (encoded % 100 == 0) println("Encoded " + encoded + " Images")

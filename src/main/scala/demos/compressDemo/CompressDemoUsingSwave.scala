@@ -18,6 +18,7 @@ import swave.core.{Drain, Spout, StreamEnv}
 
 import scala.concurrent.Future
 import scala.util.Success
+import scala.language.implicitConversions
 
 /**
   * Created by #GrowinScala
@@ -354,7 +355,7 @@ object CompressDemoUsingSwave {
   private class ExocuteSpout(exoGraph: ExoGraph) {
 
     def get(injIndex: Int): Serializable = {
-      exoGraph.collector.collectIndex(injIndex, LONG_TIME).get.get
+      exoGraph.collector.collectAllByIndex(injIndex).head
     }
 
   }
