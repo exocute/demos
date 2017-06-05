@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import javax.imageio.ImageIO
 import javax.swing.JFileChooser
 
-import clifton.graph.{ExoGraph, ExocuteConfig}
+import clifton.graph.{ExoGraph, ExocuteConfig, StarterExoGraph}
 import demos.compressDemo.activities.ImageConverters.convertToImageSerializable
 import io.humble.video._
 import io.humble.video.awt.{MediaPictureConverter, MediaPictureConverterFactory}
@@ -17,8 +17,8 @@ import org.jcodec.api.awt.AWTSequenceEncoder8Bit
 import swave.core.{Drain, Spout, StreamEnv}
 
 import scala.concurrent.Future
-import scala.util.Success
 import scala.language.implicitConversions
+import scala.util.Success
 
 /**
   * Created by #GrowinScala
@@ -35,7 +35,6 @@ object CompressDemoUsingSwave {
   private val grpFile = new File(DATA_FOLDER, "compressParallel.grp")
   private val jarFile = new File(DATA_FOLDER, "classes.jar")
 
-  private val LONG_TIME = 60 * 60 * 1000
   private val SHOW_AT = 50
 
   def main(args: Array[String]): Unit = {
@@ -54,7 +53,8 @@ object CompressDemoUsingSwave {
     implicit val env = StreamEnv()
     implicit val gl = scala.concurrent.ExecutionContext.Implicits.global
 
-    val Success(exoGraph) = ExocuteConfig.setHosts().addGraph(grpFile, List(jarFile), 5 * 60 * 1000)
+    ExocuteConfig.setHosts()
+    val Success(exoGraph) = StarterExoGraph.addGraphFile(grpFile, List(jarFile), 5 * 60 * 1000)
 
     //decodes the video to images and extracts the audio
     val decodeSpout: Spout[Int] = convertVideoToImages(videoPath)

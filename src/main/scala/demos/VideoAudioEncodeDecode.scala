@@ -117,7 +117,6 @@ object VideoAudioEncodeDecode {
     ((frame / seconds).toInt, frame)
   }
 
-
   /**
     * Produces a video with a sequence of input images and an audio file
     * Removes all temporary files when process is done
@@ -126,7 +125,7 @@ object VideoAudioEncodeDecode {
     * @param frameRate       fps
     * @param keyFrames       Vector of booleans - true --> isKeyFrame and false --> isNotAKeyFrame
     */
-  def produceVideo(targetVideoName: String, frameRate: Int, keyFrames: Vector[Boolean]) = {
+  def produceVideo(targetVideoName: String, frameRate: Int, keyFrames: Vector[Boolean]): Unit = {
 
     def createVideo() = {
       def encodeImage(encoder: AWTSequenceEncoder8Bit, index: Int, isKeyFrame: Boolean) = {
@@ -188,7 +187,7 @@ object VideoAudioEncodeDecode {
     *
     * @param moviePath - movie path source
     */
-  def extractAudio(moviePath: String) = {
+  def extractAudio(moviePath: String): Int = {
     //removes the audio file if exists
     deleteTempFile(AUDIOPATH)
     val rt: Runtime = Runtime.getRuntime
@@ -198,10 +197,8 @@ object VideoAudioEncodeDecode {
 
   /**
     * Removes a File from the system if it exists
-    *
-    * @param path
     */
-  def deleteTempFile(path: String) = {
+  def deleteTempFile(path: String): Unit = {
     val filePath: File = new File(path)
     if (filePath.exists()) {
       val pathFile: Path = Paths.get(path)

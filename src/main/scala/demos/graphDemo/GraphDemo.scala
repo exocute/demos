@@ -1,10 +1,10 @@
 package demos.graphDemo
 
 import java.io.File
-import java.nio.file.{Files, Paths}
+import java.nio.file.Files
 
 import api.{Collector, Injector}
-import clifton.graph.ExocuteConfig
+import clifton.graph.{ExocuteConfig, StarterExoGraph}
 import exonode.clifton.node.SpaceCache
 
 import scala.util.{Failure, Success}
@@ -21,8 +21,8 @@ object GraphDemo {
 
   def main(args: Array[String]): Unit = {
 
-    val starterExoGraph = ExocuteConfig.setHosts(SpaceCache.signalHost, SpaceCache.dataHost, SpaceCache.jarHost)
-    starterExoGraph.addGraph(file, jars, 60 * 60 * 1000) match {
+    ExocuteConfig.setHosts(SpaceCache.signalHost, SpaceCache.dataHost, SpaceCache.jarHost)
+    StarterExoGraph.addGraphFile(file, jars, 60 * 60 * 1000) match {
       case Failure(e) =>
         val msg = e.getMessage
         println(s"Error loading grp file:\n${if (msg == null) e else msg}")

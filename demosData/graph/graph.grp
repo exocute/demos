@@ -1,7 +1,7 @@
 Graph criticalZones
-Activity IMP   example.graphExample.ImportGML
-Activity BC    example.graphExample.BetweenessCentrality
-Activity CC    example.graphExample.ClusteringCoefficient
-Activity AVGPL example.graphExample.AveragePathLength
-Activity D     example.graphExample.DecideNodes:20
-Connection IMP -> BC,CC,AVGPL -> D
+Activity IMP   demos.graphDemo.activities.ImportGML
+Activity BC    demos.graphDemo.activities.BetweenessCentrality
+Activity CC    demos.graphDemo.activities.ClusteringCoefficient
+Activity AVGPL demos.graphDemo.activities.AveragePathLength
+Activity D     demos.graphDemo.activities.DecideNodes:20
+Connection IMP -> (BC, CC, AVGPL) -> D

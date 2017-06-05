@@ -11,11 +11,10 @@ class ImportGML extends Activity {
 
   def process(input: java.io.Serializable, params: Vector[String]): java.io.Serializable = {
     val graph = new CreateGraph(input.asInstanceOf[Array[Byte]])
-    val output = (graph.graphRep.toMap: GraphType, graph.nodeCount, graph.edgesCount)
-    Vector(output, output, output)
+    (graph.graphRep.toMap: GraphType, graph.nodeCount, graph.edgesCount)
   }
 
-  class CreateGraph(val bytes: Array[Byte]) {
+  private class CreateGraph(val bytes: Array[Byte]) {
     val br = new BufferedReader(new StringReader(new String(bytes)))
     val graphRep = mutable.HashMap[Int, Vector[Int]]()
     var nodeCount = 0

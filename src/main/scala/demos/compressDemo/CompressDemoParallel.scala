@@ -41,11 +41,8 @@ object CompressDemoParallel {
 
         val grpFile = new File(DATA_FOLDER, "compressParallel.grp")
         val jarFile = new File(DATA_FOLDER, "classes.jar")
-        val TIMETOTAKE = 24 * 60 * 60 * 1000
 
-        val starter = new StarterExoGraph
-
-        val Success(graph) = starter.addGraph(grpFile, List(jarFile), 30 * 60 * 1000)
+        val Success(graph) = StarterExoGraph.addGraphFile(grpFile, List(jarFile), 30 * 60 * 1000)
 
         //number images decoded
         val images: AtomicInteger = new AtomicInteger()
@@ -149,7 +146,6 @@ object CompressDemoParallel {
   /**
     * graphic implementation to choose a file
     *
-    * @param description
     * @return Path's File
     */
   private def chooseFile(description: String): Option[String] = {
@@ -164,8 +160,6 @@ object CompressDemoParallel {
 
   /**
     * Removes a File from the system if it exists
-    *
-    * @param file
     */
   private def deleteTempFile(file: File) = {
     if (file.exists()) {
@@ -190,7 +184,6 @@ object CompressDemoParallel {
   /**
     * uses ffmpeg to add audio to a file
     *
-    * @param targetVideoName
     * @return
     */
   private def addAudio(targetVideoName: String) = {
@@ -290,7 +283,6 @@ object CompressDemoParallel {
   /**
     * prints "KEYFRAME" in a bufferedImage
     *
-    * @param image
     * @return
     */
   private def printKeyFrame(image: BufferedImage): BufferedImage = {

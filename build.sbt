@@ -1,8 +1,8 @@
 name := "ExoDemos"
 
-version := "1.2"
+version := "1.3"
 
-scalaVersion := "2.12.1"
+scalaVersion := "2.12.2"
 
 scalacOptions ++= Seq("-feature", "-deprecation")
 
@@ -14,4 +14,4 @@ resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repos
 
 libraryDependencies ++= Seq("com.flyobjectspace" %% "flyscala" % "2.2.0-SNAPSHOT")
 
-libraryDependencies += "growin" %% "toolkit" % "1.2"
+libraryDependencies += "growin" %% "toolkit" % "1.3"
